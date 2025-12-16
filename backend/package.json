@@ -1,0 +1,26 @@
+{
+  "name": "@authflow/backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Backend serverless do AuthFlow",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "serverless offline start --reloadHandler",
+    "dev": "npm run start",
+    "build": "tsc",
+    "test:health": "npm run build && node test-health.js",
+    "deploy:dev": "serverless deploy --stage dev",
+    "deploy:staging": "serverless deploy --stage staging",
+    "deploy:prod": "serverless deploy --stage prod",
+    "test": "echo 'Testes - será configurado depois'"
+  },
+  "devDependencies": {
+    "@serverless/typescript": "^4.27.1",
+    "@types/aws-lambda": "^8.10.159",
+    "@types/node": "^20.10.5",
+    "@types/serverless": "^3.12.27",
+    "serverless": "^4.28.0",
+    "serverless-offline": "^14.4.0",
+    "typescript": "^5.3.3"
+  }
+}

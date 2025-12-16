@@ -1,0 +1,38 @@
+{
+  "name": "AuthFlow Dev",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspace",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "humao.rest-client",
+        "eamodio.gitlens",
+        "Vue.volar",
+        "christian-kohler.path-intellisense",
+        "usernamehw.errorlens",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        }
+      }
+    }
+  },
+
+  // Portas que vamos usar
+  "forwardPorts": [
+    5173, // Vite (frontend)
+    3000 // Serverless Offline (backend)
+  ],
+
+  // Comandos pós-criação
+  "postCreateCommand": "npm install"
+}

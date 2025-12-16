@@ -1,0 +1,4 @@
+@api_local = http://localhost:3000
+
+### Health Check
+GET {{api_local}}/health
