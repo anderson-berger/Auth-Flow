@@ -14,7 +14,7 @@ const serverlessConfiguration: AWS = {
 
     // Variáveis de ambiente globais
     environment: {
-      STAGE: "${self:provider.stage}",
+      NODE_ENV: "${self:provider.stage}",
       SERVICE_NAME: "${self:service}",
     },
   },
@@ -50,10 +50,20 @@ const serverlessConfiguration: AWS = {
       handler: "src/features/health/handler.handler",
       events: [
         {
-          http: {
+          httpApi: {
             path: "/health",
             method: "GET",
-            cors: true,
+          },
+        },
+      ],
+    },
+    login: {
+      handler: "src/features/auth/login/handler.handler",
+      events: [
+        {
+          httpApi: {
+            path: "/auth/login",
+            method: "POST",
           },
         },
       ],
