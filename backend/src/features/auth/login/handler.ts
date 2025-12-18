@@ -1,41 +1,22 @@
-import type {
-  APIGatewayProxyEventV2,
-  APIGatewayProxyResultV2,
-} from "aws-lambda";
-import { apiSuccess, apiError } from "@/shared/response/response";
-import { $loginRequest, type LoginResponse } from "./login-schemas";
+import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from "aws-lambda";
+import { $loginRequest } from "@src/features/auth/login/login-schemas";
+import { LoginService } from "@src/features/auth/login/LoginService";
+import { apiError, apiSuccess } from "@src/shared/response/response";
+
+const loginService = new LoginService();
 
 /**
  * Login Handler
  *
  * Endpoint: POST /auth/login
- * Autentica usuário e retorna tokens JWT
+ * Authenticates user and returns JWT tokens
  */
-export async function handler(
-  event: APIGatewayProxyEventV2
-): Promise<APIGatewayProxyResultV2> {
+export async function handler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
   try {
-    // 1. Parse e validação com Zod
-    const input = $loginRequest.parse(JSON.parse(event.body || "{}"));
+    const body = JSON.parse(event.body || "{}");
+    const input = $loginRequest.parse(body);
 
-    // 2. TODO: Buscar usuário no banco
-    // Por enquanto, mock de dados
-    console.log("Login attempt:", { email: input.email, password: "***" });
-
-    // 3. TODO: Verificar senha com bcrypt
-    // Por enquanto, aceitar qualquer senha
-
-    // 4. TODO: Gerar JWT tokens
-    // Por enquanto, mock de tokens
-    const result: LoginResponse = {
-      accessToken: "mock-access-token-12345",
-      refreshToken: "mock-refresh-token-67890",
-      user: {
-        id: "user-123",
-        email: input.email,
-        name: "Mock User",
-      },
-    };
+    const result = await loginService.execute(input);
 
     return apiSuccess(result, 200);
   } catch (error) {

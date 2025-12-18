@@ -1,21 +1,22 @@
 import type { AWS } from "@serverless/typescript";
 
 const serverlessConfiguration: AWS = {
-  service: "authflow-backend",
+  service: "authflow",
   frameworkVersion: "4",
 
   provider: {
     name: "aws",
     runtime: "nodejs18.x",
     region: "sa-east-1",
-    stage: '${opt:stage, "dev"}',
+    stage: '${opt:stage, "local"}',
     memorySize: 256,
     timeout: 30,
 
     // Variáveis de ambiente globais
     environment: {
-      NODE_ENV: "${self:provider.stage}",
+      STAGE: "${self:provider.stage}",
       SERVICE_NAME: "${self:service}",
+      TABLE: "${self:service}-${opt:stage, 'local'}",
     },
   },
 
@@ -63,6 +64,17 @@ const serverlessConfiguration: AWS = {
         {
           httpApi: {
             path: "/auth/login",
+            method: "POST",
+          },
+        },
+      ],
+    },
+    register: {
+      handler: "src/features/auth/register/handler.handler",
+      events: [
+        {
+          httpApi: {
+            path: "/auth/register",
             method: "POST",
           },
         },

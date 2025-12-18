@@ -10,6 +10,10 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
 
     // Module resolution
     "target": "ES2022",
@@ -30,7 +34,8 @@
     "declarationMap": true,
     "sourceMap": true,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./"],
+      "@src/*": ["src/*"]
     }
   },
   "include": ["src/**/*"],

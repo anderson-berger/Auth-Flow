@@ -1,8 +1,5 @@
-import { apiError, apiSuccess } from "@/shared/response/response";
-import type {
-  APIGatewayProxyEventV2,
-  APIGatewayProxyResultV2,
-} from "aws-lambda";
+import { apiError, apiSuccess } from "@src/shared/response/response";
+import type { APIGatewayProxyResultV2 } from "aws-lambda";
 
 /**
  * Health Check Handler
@@ -10,9 +7,7 @@ import type {
  * Endpoint: GET /health
  * Returns service status
  */
-export async function handler(
-  event: APIGatewayProxyEventV2
-): Promise<APIGatewayProxyResultV2> {
+export async function handler(): Promise<APIGatewayProxyResultV2> {
   try {
     const healthData = {
       status: "ok",

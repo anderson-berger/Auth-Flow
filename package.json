@@ -2,7 +2,7 @@
   "name": "authflow",
   "version": "0.1.0",
   "private": true,
-  "description": "Sistema de autenticação completo com Vue 3 e AWS Lambda",
+  "description": "Complete authentication system with Vue 3 and AWS Lambda",
   "author": "Anderson",
   "license": "MIT",
   "workspaces": [
@@ -10,15 +10,22 @@
     "backend"
   ],
   "scripts": {
-    "start:backend": "npm run dev --workspace=backend",
-    "start:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
     "build:backend": "npm run build --workspace=backend",
     "build:frontend": "npm run build --workspace=frontend",
     "test": "npm run test --workspaces",
-    "lint": "npm run lint --workspaces"
+    "test:backend": "npm run test --workspace=backend",
+    "test:frontend": "npm run test --workspace=frontend",
+    "lint": "npm run lint --workspaces",
+    "format": "prettier --write \"**/*.{ts,js,json,yml,yaml,md,vue}\"",
+    "format:check": "prettier --check \"**/*.{ts,js,json,yml,yaml,md,vue}\""
   },
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.7.4"
   }
 }

@@ -4,6 +4,9 @@
   "service": "dev",
   "workspaceFolder": "/workspace",
 
+  "overrideCommand": false,
+  "shutdownAction": "stopCompose",
+
   "customizations": {
     "vscode": {
       "extensions": [
@@ -27,12 +30,7 @@
     }
   },
 
-  // Portas que vamos usar
-  "forwardPorts": [
-    5173, // Vite (frontend)
-    3000 // Serverless Offline (backend)
-  ],
+  "forwardPorts": [5173, 3000, 4567, 8001],
 
-  // Comandos pós-criação
   "postCreateCommand": "npm install"
 }

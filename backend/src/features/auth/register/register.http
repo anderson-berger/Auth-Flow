@@ -1,0 +1,13 @@
+@api_local = http://localhost:3000
+
+### Register User
+POST {{api_local}}/auth/register
+Accept: application/json
+User-Agent: RestClient
+
+{
+   "name": "anderson" ,
+   "email": "anderson@anderson.com",
+   "password": "anderson" ,
+   "confirmPassword": "anderson" 
+}

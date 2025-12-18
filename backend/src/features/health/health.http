@@ -2,3 +2,6 @@
 
 ### Health Check
 GET {{api_local}}/health
+Accept: application/json
+User-Agent: RestClient
+

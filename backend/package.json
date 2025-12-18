@@ -2,21 +2,18 @@
   "name": "@authflow/backend",
   "version": "0.1.0",
   "private": true,
-  "description": "Backend serverless do AuthFlow",
+  "description": "AuthFlow serverless backend",
   "main": "dist/index.js",
   "scripts": {
-    "start": "serverless offline start --reloadHandler",
-    "dev": "npm run start",
-    "build": "tsc",
-    "test:health": "npm run build && node test-health.js",
-    "deploy:dev": "serverless deploy --stage dev",
-    "deploy:staging": "serverless deploy --stage staging",
-    "deploy:prod": "serverless deploy --stage prod",
-    "test": "echo 'Testes - será configurado depois'"
+    "build": "tsc --noEmit",
+    "db:setup": "tsx scripts/setup-local-db.ts",
+    "dev": "npm run db:setup && serverless offline start --reloadHandler",
+    "deploy:dev": "serverless deploy --stage local"
   },
   "devDependencies": {
     "@serverless/typescript": "^4.27.1",
     "@types/aws-lambda": "^8.10.159",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.10.5",
     "@types/serverless": "^3.12.27",
     "serverless": "^4.28.0",
@@ -24,6 +21,12 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.954.0",
+    "@aws-sdk/lib-dynamodb": "^3.953.0",
+    "bcryptjs": "^3.0.3",
+    "dayjs": "^1.11.19",
+    "dotenv": "^17.2.3",
+    "jose": "^5.10.0",
     "zod": "^4.2.1"
   }
 }

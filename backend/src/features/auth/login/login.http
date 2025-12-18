@@ -5,5 +5,5 @@ POST {{api_local}}/auth/login
 
 {
    "email": "testes@testes.com",
-   "password": "teste" 
+   "password": "senha123" 
 }
