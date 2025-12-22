@@ -5,12 +5,6 @@ import { apiError, apiSuccess } from "@src/shared/response/response";
 
 const loginService = new LoginService();
 
-/**
- * Login Handler
- *
- * Endpoint: POST /auth/login
- * Authenticates user and returns JWT tokens
- */
 export async function handler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
   try {
     const body = JSON.parse(event.body || "{}");

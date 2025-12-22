@@ -80,6 +80,17 @@ const serverlessConfiguration: AWS = {
         },
       ],
     },
+    confirmation: {
+      handler: "src/features/auth/confirmation/handler.handler",
+      events: [
+        {
+          httpApi: {
+            path: "/auth/confirm-email",
+            method: "GET",
+          },
+        },
+      ],
+    },
   },
 };
 

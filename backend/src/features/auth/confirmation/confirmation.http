@@ -1,0 +1,33 @@
+@api_local = http://localhost:3000
+
+### Health Check
+GET {{api_local}}/health
+
+### Login
+POST {{api_local}}/auth/login
+Content-Type: application/json
+
+{
+   "email": "testes@testes.com",
+   "password": "senha123" 
+}
+
+### Register
+POST {{api_local}}/auth/register
+Content-Type: application/json
+
+{
+   "name": "Anderson",
+   "email": "testes@testes.com",
+   "password": "senha123",
+   "confirmPassword": "senha123"
+}
+
+### Confirm Email (com token válido)
+GET {{api_local}}/auth/confirm-email?token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI4OWNjNjM1Zi0zMmZlLTQ1NWYtYmU3ZC02M2NiMzQ0NmM0MWQiLCJlbWFpbCI6InRlc3Rlc0B0ZXN0ZXMuY29tIiwiaWF0IjoxNzY2NDM0OTkxLCJleHAiOjE3NjcwMzk3OTF9.F9X__8tY9B-XEBQPaNjIxx89E-zSX1nkdMRhtpT4E6w
+
+### Confirm Email (sem token - deve dar erro 400)
+GET {{api_local}}/auth/confirm-email
+
+### Confirm Email (com token inválido - deve dar erro 401)
+GET {{api_local}}/auth/confirm-email?token=token_invalido_aqui
