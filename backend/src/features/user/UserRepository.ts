@@ -2,8 +2,9 @@
 import { dynamoDBClient } from "@src/shared/database/dynamodb-client";
 import { GetCommand, PutCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { $user, User } from "@src/features/user/user-schemas";
+import { env } from "@src/shared/config/env";
 
-const TABLE = process.env.TABLE!;
+const TABLE = env.TABLE;
 
 export class UserRepository {
   constructor() {}

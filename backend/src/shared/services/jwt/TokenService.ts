@@ -1,4 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
+import { UnauthorizedError } from "@src/shared/errors/errors";
+import { env } from "@src/shared/config/env";
 
 export interface TokenPayload {
   userId: string;
@@ -10,15 +12,14 @@ export class TokenService {
   private readonly accessTokenExpiry: string;
   private readonly refreshTokenExpiry: string;
   private readonly confirmationTokenExpiry: string;
-  private readonly credentailResetTokenExpiry: string;
+  private readonly credentialResetTokenExpiry: string;
 
   constructor() {
-    const secret = process.env.JWT_SECRET || "dev-secret-change-in-production";
-    this.jwtSecret = new TextEncoder().encode(secret);
-    this.accessTokenExpiry = process.env.JWT_ACCESS_TOKEN_EXPIRY || "15m";
-    this.refreshTokenExpiry = process.env.JWT_REFRESH_TOKEN_EXPIRY || "7d";
-    this.confirmationTokenExpiry = process.env.JWT_CONFIRMATION_TOKEN_EXPIRY || "15m";
-    this.credentailResetTokenExpiry = process.env.JWT_CREDENTAIL_RESET_TOKEN_EXPIRY || "5m";
+    this.jwtSecret = new TextEncoder().encode(env.JWT_SECRET);
+    this.accessTokenExpiry = env.JWT_ACCESS_TOKEN_EXPIRY;
+    this.refreshTokenExpiry = env.JWT_REFRESH_TOKEN_EXPIRY;
+    this.confirmationTokenExpiry = env.JWT_CONFIRMATION_TOKEN_EXPIRY;
+    this.credentialResetTokenExpiry = env.JWT_CREDENTIAL_RESET_TOKEN_EXPIRY;
   }
 
   async generateAccessToken(payload: TokenPayload): Promise<string> {
@@ -49,7 +50,7 @@ export class TokenService {
     return new SignJWT({ ...payload })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
-      .setExpirationTime(this.credentailResetTokenExpiry)
+      .setExpirationTime(this.credentialResetTokenExpiry)
       .sign(this.jwtSecret);
   }
 
@@ -61,7 +62,7 @@ export class TokenService {
         email: payload.email as string,
       };
     } catch (error) {
-      throw new Error("Invalid or expired token");
+      throw new UnauthorizedError("Invalid or expired token");
     }
   }
 }

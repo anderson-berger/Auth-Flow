@@ -1,10 +1,11 @@
 import bcrypt from "bcryptjs";
+import { env } from "@src/shared/config/env";
 
 export class CryptoService {
   private readonly saltRounds: number;
 
   constructor() {
-    this.saltRounds = parseInt(process.env.BCRYPT_ROUNDS || "10", 10);
+    this.saltRounds = env.BCRYPT_ROUNDS;
   }
 
   async hashPassword(password: string): Promise<string> {

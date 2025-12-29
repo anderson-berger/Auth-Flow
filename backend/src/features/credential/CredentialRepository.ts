@@ -2,9 +2,10 @@
 import { GetCommand, PutCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { dynamoDBClient } from "@src/shared/database/dynamodb-client";
 import { $credential, Credential } from "@src/features/credential/credential-schemas";
+import { env } from "@src/shared/config/env";
 import dayjs from "dayjs";
 
-const TABLE = process.env.TABLE!;
+const TABLE = env.TABLE;
 
 export class CredentialRepository {
   constructor() {}
