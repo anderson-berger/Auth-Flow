@@ -1,18 +1,10 @@
 import { SignJWT, jwtVerify } from "jose";
 
-/**
- * Token payload structure
- */
 export interface TokenPayload {
   userId: string;
   email: string;
 }
 
-/**
- * Token Service
- *
- * Handles JWT token generation and verification using jose
- */
 export class TokenService {
   private readonly jwtSecret: Uint8Array;
   private readonly accessTokenExpiry: string;
@@ -20,7 +12,6 @@ export class TokenService {
   private readonly confirmationTokenExpiry: string;
 
   constructor() {
-    // Get from environment variables (with fallbacks for local dev)
     const secret = process.env.JWT_SECRET || "dev-secret-change-in-production";
     this.jwtSecret = new TextEncoder().encode(secret);
     this.accessTokenExpiry = process.env.JWT_ACCESS_TOKEN_EXPIRY || "15m";
@@ -28,9 +19,6 @@ export class TokenService {
     this.confirmationTokenExpiry = process.env.JWT_CONFIRMATION_TOKEN_EXPIRY || "7d";
   }
 
-  /**
-   * Generate access token (short-lived)
-   */
   async generateAccessToken(payload: TokenPayload): Promise<string> {
     return new SignJWT({ ...payload })
       .setProtectedHeader({ alg: "HS256" })
@@ -39,9 +27,6 @@ export class TokenService {
       .sign(this.jwtSecret);
   }
 
-  /**
-   * Generate refresh token (long-lived)
-   */
   async generateRefreshToken(payload: TokenPayload): Promise<string> {
     return new SignJWT({ ...payload })
       .setProtectedHeader({ alg: "HS256" })
@@ -50,9 +35,6 @@ export class TokenService {
       .sign(this.jwtSecret);
   }
 
-  /**
-   * Generate confirmation token (short-lived)
-   */
   async generateEmailConfirmationToken(payload: TokenPayload) {
     return new SignJWT({ ...payload })
       .setProtectedHeader({ alg: "HS256" })
@@ -61,9 +43,6 @@ export class TokenService {
       .sign(this.jwtSecret);
   }
 
-  /**
-   * Verify and decode token
-   */
   async verifyToken(token: string): Promise<TokenPayload> {
     try {
       const { payload } = await jwtVerify(token, this.jwtSecret);

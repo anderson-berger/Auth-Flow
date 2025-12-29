@@ -17,21 +17,18 @@ export class ConfirmationService {
   }
 
   async execute(request: ConfirmEmailRequest): Promise<ConfirmEmailResponse> {
-    // 1. Valida e decodifica token JWT
     const payload = await this.tokenService.verifyToken(request.token);
 
     if (!payload) {
       throw new UnauthorizedError("Invalid or expired confirmation token");
     }
 
-    // 2. Busca usuário pelo ID do token
     const user = await this.userService.findById(payload.userId);
 
     if (!user) {
       throw new NotFoundError("User not found");
     }
 
-    // 3. Verifica se email já foi confirmado
     if (user.status !== "PENDING") {
       return {
         message: "Email already confirmed",
@@ -39,10 +36,8 @@ export class ConfirmationService {
       };
     }
 
-    // 4. Marca email como verificado
     await this.userService.updateStatus(user.id, "ACTIVE");
 
-    // 5. Envia email de boas-vindas
     await this.emailService.send({
       type: "WELCOME",
       to: user.email,
@@ -51,7 +46,6 @@ export class ConfirmationService {
       },
     });
 
-    // 6. Retorna sucesso
     return {
       message: "Email confirmed successfully",
       email: user.email,

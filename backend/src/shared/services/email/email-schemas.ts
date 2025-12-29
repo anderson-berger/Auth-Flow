@@ -10,43 +10,39 @@ export const $emailType = z.enum(["CONFIRMATION", "PASSWORD_RESET", "WELCOME"]);
 export const $emailConfirmationData = z.object({
   userName: z.string().min(1),
   confirmationToken: z.string().min(1),
-  confirmationUrl: z.string().url(),
+  confirmationUrl: z.url(),
 });
 
-// Dados para reset de senha
 export const $passwordResetData = z.object({
   userName: z.string().min(1),
   resetToken: z.string().min(1),
-  resetUrl: z.string().url(),
+  resetUrl: z.url(),
 });
 
-// Dados para welcome
 export const $welcomeData = z.object({
   userName: z.string().min(1),
 });
 
-// Resultado do template
 export const $emailResult = z.object({
   subject: z.string().min(1),
   html: z.string().min(1),
   text: z.string().min(1),
 });
 
-// ===== Discriminated Union =====
 export const $emailPayload = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("CONFIRMATION"),
-    to: z.string().email(),
+    to: z.email(),
     data: $emailConfirmationData,
   }),
   z.object({
     type: z.literal("PASSWORD_RESET"),
-    to: z.string().email(),
+    to: z.email(),
     data: $passwordResetData,
   }),
   z.object({
     type: z.literal("WELCOME"),
-    to: z.string().email(),
+    to: z.email(),
     data: $welcomeData,
   }),
 ]);

@@ -8,9 +8,6 @@ const TABLE = process.env.TABLE!;
 export class UserRepository {
   constructor() {}
 
-  /**
-   * Salva usuário (create ou replace)
-   */
   async save(user: User): Promise<void> {
     await dynamoDBClient.send(
       new PutCommand({

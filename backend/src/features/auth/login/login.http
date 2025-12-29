@@ -1,6 +1,6 @@
 @api_local = http://localhost:3000
 
-### Health Check
+### Login
 POST {{api_local}}/auth/login
 
 {
