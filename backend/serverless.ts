@@ -80,6 +80,45 @@ const serverlessConfiguration: AWS = {
         },
       ],
     },
+    confirmation: {
+      handler: "src/features/auth/confirmation/handler.handler",
+      events: [
+        {
+          httpApi: {
+            path: "/auth/confirm-email",
+            method: "GET",
+          },
+        },
+      ],
+    },
+    refresh: {
+      handler: "src/features/auth/refresh/handler.handler",
+      events: [
+        {
+          httpApi: {
+            path: "/auth/refresh",
+            method: "POST",
+          },
+        },
+      ],
+    },
+    credentialReset: {
+      handler: "src/features/credential/handler.handler",
+      events: [
+        {
+          httpApi: {
+            path: "/api/credential",
+            method: "post",
+          },
+        },
+        {
+          httpApi: {
+            path: "/api/credential",
+            method: "put",
+          },
+        },
+      ],
+    },
   },
 };
 

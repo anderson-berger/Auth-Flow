@@ -1,34 +1,26 @@
 import { SignJWT, jwtVerify } from "jose";
 
-/**
- * Token payload structure
- */
 export interface TokenPayload {
   userId: string;
   email: string;
 }
 
-/**
- * Token Service
- *
- * Handles JWT token generation and verification using jose
- */
 export class TokenService {
   private readonly jwtSecret: Uint8Array;
   private readonly accessTokenExpiry: string;
   private readonly refreshTokenExpiry: string;
+  private readonly confirmationTokenExpiry: string;
+  private readonly credentailResetTokenExpiry: string;
 
   constructor() {
-    // Get from environment variables (with fallbacks for local dev)
     const secret = process.env.JWT_SECRET || "dev-secret-change-in-production";
     this.jwtSecret = new TextEncoder().encode(secret);
     this.accessTokenExpiry = process.env.JWT_ACCESS_TOKEN_EXPIRY || "15m";
     this.refreshTokenExpiry = process.env.JWT_REFRESH_TOKEN_EXPIRY || "7d";
+    this.confirmationTokenExpiry = process.env.JWT_CONFIRMATION_TOKEN_EXPIRY || "15m";
+    this.credentailResetTokenExpiry = process.env.JWT_CREDENTAIL_RESET_TOKEN_EXPIRY || "5m";
   }
 
-  /**
-   * Generate access token (short-lived)
-   */
   async generateAccessToken(payload: TokenPayload): Promise<string> {
     return new SignJWT({ ...payload })
       .setProtectedHeader({ alg: "HS256" })
@@ -37,9 +29,6 @@ export class TokenService {
       .sign(this.jwtSecret);
   }
 
-  /**
-   * Generate refresh token (long-lived)
-   */
   async generateRefreshToken(payload: TokenPayload): Promise<string> {
     return new SignJWT({ ...payload })
       .setProtectedHeader({ alg: "HS256" })
@@ -48,9 +37,22 @@ export class TokenService {
       .sign(this.jwtSecret);
   }
 
-  /**
-   * Verify and decode token
-   */
+  async generateEmailConfirmationToken(payload: TokenPayload) {
+    return new SignJWT({ ...payload })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime(this.confirmationTokenExpiry)
+      .sign(this.jwtSecret);
+  }
+
+  async generatePasswordResetToken(payload: TokenPayload) {
+    return new SignJWT({ ...payload })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime(this.credentailResetTokenExpiry)
+      .sign(this.jwtSecret);
+  }
+
   async verifyToken(token: string): Promise<TokenPayload> {
     try {
       const { payload } = await jwtVerify(token, this.jwtSecret);

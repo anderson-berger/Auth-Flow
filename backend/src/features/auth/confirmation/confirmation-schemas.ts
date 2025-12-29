@@ -1,25 +1,13 @@
-import { $user } from "@src/features/user/user-schemas";
 import { z } from "zod";
 
-/**
- * Login Request validation schema
- */
-export const $loginRequest = z.object({
-  email: z.email("Invalid email").toLowerCase().trim(),
-  password: z.string().min(6, "Password must be at least 6 characters").trim(),
+export const $confirmEmailRequest = z.object({
+  token: z.string().min(1, "Token is required"),
 });
 
-/**
- * Login Response validation schema
- */
-export const $loginResponse = z.object({
-  accessToken: z.string(),
-  refreshToken: z.string(),
-  user: $user,
+export const $confirmEmailResponse = z.object({
+  message: z.string(),
+  email: z.email(),
 });
 
-/**
- * Types inferred from schemas
- */
-export type LoginRequest = z.infer<typeof $loginRequest>;
-export type LoginResponse = z.infer<typeof $loginResponse>;
+export type ConfirmEmailRequest = z.infer<typeof $confirmEmailRequest>;
+export type ConfirmEmailResponse = z.infer<typeof $confirmEmailResponse>;
