@@ -19,6 +19,14 @@ import { UserService } from "@src/features/user/UserService";
 import { User } from "@src/features/user/user-schemas";
 import { env } from "@src/shared/config/env";
 
+interface CredentialServiceDependencies {
+  credentialRepository?: CredentialRepository;
+  cryptoService?: CryptoService;
+  tokenService?: TokenService;
+  emailService?: EmailService;
+  userService?: UserService;
+}
+
 export class CredentialService {
   private credentialRepository: CredentialRepository;
   private cryptoService: CryptoService;
@@ -26,12 +34,12 @@ export class CredentialService {
   private emailService: EmailService;
   private userService: UserService;
 
-  constructor() {
-    this.credentialRepository = new CredentialRepository();
-    this.cryptoService = new CryptoService();
-    this.tokenService = new TokenService();
-    this.emailService = new EmailService();
-    this.userService = new UserService();
+  constructor(dependencies?: CredentialServiceDependencies) {
+    this.credentialRepository = dependencies?.credentialRepository ?? new CredentialRepository();
+    this.cryptoService = dependencies?.cryptoService ?? new CryptoService();
+    this.tokenService = dependencies?.tokenService ?? new TokenService();
+    this.emailService = dependencies?.emailService ?? new EmailService();
+    this.userService = dependencies?.userService ?? new UserService();
   }
 
   async create(newCredential: NewCredential): Promise<void> {

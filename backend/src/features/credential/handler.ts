@@ -6,6 +6,7 @@ import {
   $resetCredential,
 } from "@src/features/credential/credential-schemas";
 import { BadRequestError } from "@src/shared/errors/errors";
+import { parseRequestBody } from "@src/shared/utils/parse-body";
 
 const credentialService = new CredentialService();
 
@@ -28,14 +29,14 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
 }
 
 async function post(event: APIGatewayProxyEventV2) {
-  const body = JSON.parse(event.body || "{}");
+  const body = parseRequestBody(event.body);
   const input = $requestCredentialReset.parse(body);
   const result = await credentialService.requestCredentialReset(input);
   return apiSuccess(result, 200);
 }
 
 async function put(event: APIGatewayProxyEventV2) {
-  const body = JSON.parse(event.body || "{}");
+  const body = parseRequestBody(event.body);
   const input = $resetCredential.parse(body);
   const result = await credentialService.credentialReset(input);
   return apiSuccess(result, 200);

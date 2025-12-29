@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const $loginRequest = z.object({
   email: z.email("Invalid email").toLowerCase().trim(),
-  password: z.string().min(6, "Password must be at least 6 characters").trim(),
+  password: z.string().min(8, "Password must be at least 8 characters").trim(),
 });
 
 export const $loginResponse = z.object({

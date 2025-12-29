@@ -7,13 +7,18 @@ import type {
   RefreshTokenResponse,
 } from "@src/features/auth/refresh/refresh-schemas";
 
+interface RefreshServiceDependencies {
+  tokenService?: TokenService;
+  userService?: UserService;
+}
+
 export class RefreshService {
   private tokenService: TokenService;
   private userService: UserService;
 
-  constructor() {
-    this.tokenService = new TokenService();
-    this.userService = new UserService();
+  constructor(dependencies?: RefreshServiceDependencies) {
+    this.tokenService = dependencies?.tokenService ?? new TokenService();
+    this.userService = dependencies?.userService ?? new UserService();
   }
 
   async execute(input: RefreshTokenRequest): Promise<RefreshTokenResponse> {

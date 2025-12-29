@@ -6,17 +6,24 @@ import { CryptoService } from "@src/shared/services/CryptoService";
 import { TokenService } from "@src/shared/services/jwt/TokenService";
 import { CredentialService } from "@src/features/credential/CredentialService";
 
+interface LoginServiceDependencies {
+  tokenService?: TokenService;
+  cryptoService?: CryptoService;
+  userService?: UserService;
+  credentialService?: CredentialService;
+}
+
 export class LoginService {
   private tokenService: TokenService;
   private cryptoService: CryptoService;
   private userService: UserService;
   private credentialService: CredentialService;
 
-  constructor() {
-    this.tokenService = new TokenService();
-    this.cryptoService = new CryptoService();
-    this.userService = new UserService();
-    this.credentialService = new CredentialService();
+  constructor(dependencies?: LoginServiceDependencies) {
+    this.tokenService = dependencies?.tokenService ?? new TokenService();
+    this.cryptoService = dependencies?.cryptoService ?? new CryptoService();
+    this.userService = dependencies?.userService ?? new UserService();
+    this.credentialService = dependencies?.credentialService ?? new CredentialService();
   }
 
   async execute(input: LoginRequest): Promise<LoginResponse> {
