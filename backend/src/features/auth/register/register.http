@@ -8,5 +8,5 @@ User-Agent: RestClient
 {
    "name": "anderson" ,
    "email": "anderson@anderson.com",
-   "password": "anderson" ,
+   "password": "anderson"
 }

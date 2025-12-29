@@ -10,13 +10,15 @@ export class TokenService {
   private readonly accessTokenExpiry: string;
   private readonly refreshTokenExpiry: string;
   private readonly confirmationTokenExpiry: string;
+  private readonly credentailResetTokenExpiry: string;
 
   constructor() {
     const secret = process.env.JWT_SECRET || "dev-secret-change-in-production";
     this.jwtSecret = new TextEncoder().encode(secret);
     this.accessTokenExpiry = process.env.JWT_ACCESS_TOKEN_EXPIRY || "15m";
     this.refreshTokenExpiry = process.env.JWT_REFRESH_TOKEN_EXPIRY || "7d";
-    this.confirmationTokenExpiry = process.env.JWT_CONFIRMATION_TOKEN_EXPIRY || "7d";
+    this.confirmationTokenExpiry = process.env.JWT_CONFIRMATION_TOKEN_EXPIRY || "15m";
+    this.credentailResetTokenExpiry = process.env.JWT_CREDENTAIL_RESET_TOKEN_EXPIRY || "5m";
   }
 
   async generateAccessToken(payload: TokenPayload): Promise<string> {
@@ -40,6 +42,14 @@ export class TokenService {
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setExpirationTime(this.confirmationTokenExpiry)
+      .sign(this.jwtSecret);
+  }
+
+  async generatePasswordResetToken(payload: TokenPayload) {
+    return new SignJWT({ ...payload })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime(this.credentailResetTokenExpiry)
       .sign(this.jwtSecret);
   }
 

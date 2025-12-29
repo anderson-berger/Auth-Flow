@@ -5,7 +5,7 @@ import { $newUser } from "@src/features/user/user-schemas";
 import { UserService } from "@src/features/user/UserService";
 import { ConflictError } from "@src/shared/errors/errors";
 import { EmailService } from "@src/shared/services/email/EmailService";
-import { TokenService } from "@src/shared/services/TokenService";
+import { TokenService } from "@src/shared/services/jwt/TokenService";
 
 export class RegisterService {
   private userService: UserService;

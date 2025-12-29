@@ -4,6 +4,6 @@
 POST {{api_local}}/auth/login
 
 {
-   "email": "testes@testes.com",
-   "password": "senha123" 
+   "email": "anderson@anderson.com",
+   "password": "anderson" 
 }

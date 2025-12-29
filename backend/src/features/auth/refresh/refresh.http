@@ -1,0 +1,39 @@
+@api_local = http://localhost:3000
+###Register
+# @name Register
+POST {{api_local}}/auth/register
+Accept: application/json
+User-Agent: RestClient
+
+{
+   "name": "refreshtoken" ,
+   "email": "refreshtoken@refreshtoken.com",
+   "password": "refreshtoken"
+}
+
+### Confirm Email (com token válido)
+GET {{api_local}}/auth/confirm-email?token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2ZDMwNDNlZC04MzZhLTRiNmItYjAxZS04Njg3OTJlYjMyN2IiLCJlbWFpbCI6InJlZnJlc2h0b2tlbkByZWZyZXNodG9rZW4uY29tIiwiaWF0IjoxNzY3MDI2NjQxLCJleHAiOjE3NjcwMjc1NDF9.F443z-YVLlXaBe5SgpW6iIh180FJ2tcqmqWSeIIpfZw
+
+
+
+### Login
+# @name Login
+POST {{api_local}}/auth/login
+Content-Type: application/json
+
+{
+   "email": "refreshtoken@refreshtoken.com",
+   "password": "refreshtoken" 
+}
+
+###
+@accessToken = {{Login.response.body.accessToken}}
+@refresh_token = {{Login.response.body.refreshToken}}
+
+### Refresh Token
+POST {{api_local}}/auth/refresh
+Content-Type: application/json
+
+{
+   "refreshToken": "{{Login.response.body.refreshToken}}"
+}

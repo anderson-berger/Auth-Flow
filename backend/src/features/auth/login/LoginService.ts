@@ -3,7 +3,7 @@ import { UserService } from "@src/features/user/UserService";
 import type { LoginRequest, LoginResponse } from "./login-schemas";
 import { InvalidCredentialsError, UnauthorizedError } from "@src/shared/errors/errors";
 import { CryptoService } from "@src/shared/services/CryptoService";
-import { TokenService } from "@src/shared/services/TokenService";
+import { TokenService } from "@src/shared/services/jwt/TokenService";
 import { CredentialService } from "@src/features/credential/CredentialService";
 
 export class LoginService {

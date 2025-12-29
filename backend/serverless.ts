@@ -91,6 +91,34 @@ const serverlessConfiguration: AWS = {
         },
       ],
     },
+    refresh: {
+      handler: "src/features/auth/refresh/handler.handler",
+      events: [
+        {
+          httpApi: {
+            path: "/auth/refresh",
+            method: "POST",
+          },
+        },
+      ],
+    },
+    credentialReset: {
+      handler: "src/features/credential/handler.handler",
+      events: [
+        {
+          httpApi: {
+            path: "/api/credential",
+            method: "post",
+          },
+        },
+        {
+          httpApi: {
+            path: "/api/credential",
+            method: "put",
+          },
+        },
+      ],
+    },
   },
 };
 

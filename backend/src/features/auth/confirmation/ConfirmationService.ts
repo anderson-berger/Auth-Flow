@@ -1,7 +1,7 @@
 // backend/src/features/auth/confirmation/ConfirmationService.ts
 import { ConfirmEmailRequest, ConfirmEmailResponse } from "./confirmation-schemas";
 import { UserService } from "@src/features/user/UserService";
-import { TokenService } from "@src/shared/services/TokenService";
+import { TokenService } from "@src/shared/services/jwt/TokenService";
 import { NotFoundError, UnauthorizedError } from "@src/shared/errors/errors";
 import { EmailService } from "@src/shared/services/email/EmailService";
 
