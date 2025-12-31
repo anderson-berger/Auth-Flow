@@ -3,6 +3,7 @@ import { dynamoDBClient } from "@src/shared/database/dynamodb-client";
 import { GetCommand, PutCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { $user, User } from "@src/features/user/user-schemas";
 import { env } from "@src/shared/config/env";
+import { buildUpdateExpression } from "@src/shared/database/dynamodb-utils";
 
 const TABLE = env.TABLE;
 
@@ -68,22 +69,8 @@ export class UserRepository {
   }
 
   async patch(userId: string, updates: Partial<User>): Promise<void> {
-    const updateExpressions: string[] = [];
-    const attributeNames: Record<string, string> = {};
-    const attributeValues: Record<string, any> = {};
-
-    Object.entries(updates).forEach(([key, value], index) => {
-      const placeholder = `#attr${index}`;
-      const valuePlaceholder = `:val${index}`;
-
-      updateExpressions.push(`${placeholder} = ${valuePlaceholder}`);
-      attributeNames[placeholder] = key;
-      attributeValues[valuePlaceholder] = value;
-    });
-
-    updateExpressions.push("#version = #version + :inc");
-    attributeNames["#version"] = "version";
-    attributeValues[":inc"] = 1;
+    const { updateExpression, expressionAttributeNames, expressionAttributeValues } =
+      buildUpdateExpression(updates);
 
     await dynamoDBClient.send(
       new UpdateCommand({
@@ -92,27 +79,10 @@ export class UserRepository {
           pk: `USER#${userId}`,
           sk: "METADATA",
         },
-        UpdateExpression: `SET ${updateExpressions.join(", ")}`,
-        ExpressionAttributeNames: attributeNames,
-        ExpressionAttributeValues: attributeValues,
+        UpdateExpression: updateExpression,
+        ExpressionAttributeNames: expressionAttributeNames,
+        ExpressionAttributeValues: expressionAttributeValues,
         ConditionExpression: "attribute_exists(pk)",
-      })
-    );
-  }
-
-  async update(user: User): Promise<void> {
-    await dynamoDBClient.send(
-      new PutCommand({
-        TableName: TABLE,
-        Item: {
-          pk: `USER#${user.id}`,
-          sk: "METADATA",
-          gsi1pk: "USER",
-          gsi1sk: user.createdAt,
-          gsi2pk: user.email.toLowerCase(),
-          gsi2sk: "USER",
-          ...user,
-        },
       })
     );
   }

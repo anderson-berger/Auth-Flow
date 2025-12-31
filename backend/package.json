@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc --noEmit",
     "db:setup": "tsx scripts/setup-local-db.ts",
-    "dev": "npm run db:setup && serverless offline start --reloadHandler",
+    "ses:verify": "tsx scripts/verify-ses-email.ts",
+    "dev": "npm run db:setup && npm run ses:verify && serverless offline start --reloadHandler",
     "deploy:dev": "serverless deploy --stage local"
   },
   "devDependencies": {
@@ -22,11 +23,13 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.954.0",
+    "@aws-sdk/client-ses": "^3.958.0",
     "@aws-sdk/lib-dynamodb": "^3.953.0",
     "bcryptjs": "^3.0.3",
     "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
     "jose": "^5.10.0",
+    "serverless-apigateway-route-settings": "^1.1.0",
     "zod": "^4.2.1"
   }
 }

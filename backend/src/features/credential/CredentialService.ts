@@ -15,6 +15,7 @@ import { ConflictError, NotFoundError, UnauthorizedError } from "@src/shared/err
 import { CryptoService } from "@src/shared/services/CryptoService";
 import { TokenService } from "@src/shared/services/jwt/TokenService";
 import { EmailService } from "@src/shared/services/email/EmailService";
+import { EmailProviderSES } from "@src/shared/services/email/EmailProvider";
 import { UserService } from "@src/features/user/UserService";
 import { User } from "@src/features/user/user-schemas";
 import { env } from "@src/shared/config/env";
@@ -38,7 +39,7 @@ export class CredentialService {
     this.credentialRepository = dependencies?.credentialRepository ?? new CredentialRepository();
     this.cryptoService = dependencies?.cryptoService ?? new CryptoService();
     this.tokenService = dependencies?.tokenService ?? new TokenService();
-    this.emailService = dependencies?.emailService ?? new EmailService();
+    this.emailService = dependencies?.emailService ?? new EmailService(new EmailProviderSES());
     this.userService = dependencies?.userService ?? new UserService();
   }
 

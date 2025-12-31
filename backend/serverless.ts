@@ -1,5 +1,5 @@
 import type { AWS } from "@serverless/typescript";
-
+//TODO: Criar extensão de tipos personalizada e validar configuração com Zod, para nao precisa usar o @ts-ignore alem de ter um orientação e documentação melhor.
 const serverlessConfiguration: AWS = {
   service: "authflow",
   frameworkVersion: "4",
@@ -15,8 +15,33 @@ const serverlessConfiguration: AWS = {
     // Variáveis de ambiente globais
     environment: {
       STAGE: "${self:provider.stage}",
-      SERVICE_NAME: "${self:service}",
       TABLE: "${self:service}-${opt:stage, 'local'}",
+    },
+
+    // IAM Permissions
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: "Allow",
+            Action: [
+              "dynamodb:Query",
+              "dynamodb:Scan",
+              "dynamodb:GetItem",
+              "dynamodb:PutItem",
+              "dynamodb:UpdateItem",
+              "dynamodb:DeleteItem",
+            ],
+            Resource:
+              "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TABLE}",
+          },
+          {
+            Effect: "Allow",
+            Action: ["ses:SendEmail", "ses:SendRawEmail"],
+            Resource: "*",
+          },
+        ],
+      },
     },
   },
 
@@ -33,15 +58,21 @@ const serverlessConfiguration: AWS = {
   },
 
   // Plugins
-  plugins: ["serverless-offline"],
+  plugins: ["serverless-offline", "serverless-apigateway-route-settings"],
+  // limitação com o throttling: não é possível testá-lo no stage local.
+  // posso criar um Middleware para simular, nao gosto da ideia, ou posso testa em dev :/
 
   // Configurações customizadas
   custom: {
-    // Configuração do serverless-offline
     "serverless-offline": {
       httpPort: 3000,
       host: "0.0.0.0",
       noPrependStageInUrl: true,
+    },
+    "serverless-apigateway-route-settings": {
+      burstLimit: 200,
+      rateLimit: 400,
+      detailedMetricsEnabled: true,
     },
   },
 
@@ -65,6 +96,12 @@ const serverlessConfiguration: AWS = {
           httpApi: {
             path: "/auth/login",
             method: "POST",
+            //TODO: depois de criar a interface personalizada remover o ts-ignore
+            // @ts-ignore - serverless-apigateway-route-settings adiciona essa propriedade
+            routeSettings: {
+              rateLimit: 50,
+              burstLimit: 100,
+            },
           },
         },
       ],

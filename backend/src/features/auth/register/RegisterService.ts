@@ -4,6 +4,7 @@ import { $newUser, User } from "@src/features/user/user-schemas";
 import { UserService } from "@src/features/user/UserService";
 import { ConflictError } from "@src/shared/errors/errors";
 import { EmailService } from "@src/shared/services/email/EmailService";
+import { EmailProviderSES } from "@src/shared/services/email/EmailProvider";
 import { TokenService } from "@src/shared/services/jwt/TokenService";
 import { CryptoService } from "@src/shared/services/CryptoService";
 import { RegisterRepository } from "@src/features/auth/register/RegisterRepository";
@@ -30,7 +31,7 @@ export class RegisterService {
     this.userService = dependencies?.userService ?? new UserService();
     this.registerRepository = dependencies?.registerRepository ?? new RegisterRepository();
     this.tokenService = dependencies?.tokenService ?? new TokenService();
-    this.emailService = dependencies?.emailService ?? new EmailService();
+    this.emailService = dependencies?.emailService ?? new EmailService(new EmailProviderSES());
     this.cryptoService = dependencies?.cryptoService ?? new CryptoService();
   }
 
