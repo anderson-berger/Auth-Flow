@@ -23,10 +23,16 @@ export const $requestCredentialResetResponse = z.object({
   email: z.email(),
 });
 
-export const $resetCredential = z.object({
-  token: z.string().min(1, "Token is required"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
+export const $resetCredential = z
+  .object({
+    token: z.string().min(1, "Token is required"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(8, "Password must be at least 8 characters"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 export const $resetCredentialResponse = z.object({
   message: z.string(),

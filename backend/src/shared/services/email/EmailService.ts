@@ -1,14 +1,20 @@
-// backend/src/features/email/EmailService.ts
-import { EmailPayload, EmailResult, $emailPayload } from "./email-schemas";
+import { EmailPayload, EmailResult, $emailPayload } from "@src/shared/services/email/email-schemas";
 import { emailConfirmationTemplate, passwordResetTemplate, welcomeTemplate } from "./templates";
+import { EmailProvider } from "./EmailProvider";
+import { InternalServerError } from "@src/shared/errors/errors";
 
 export class EmailService {
+  constructor(private readonly provider: EmailProvider) {}
+
   async send(payload: EmailPayload): Promise<void> {
-    const validatedPayload = $emailPayload.parse(payload);
+    const validated = $emailPayload.parse(payload);
 
-    const emailContent = this.resolveTemplate(validatedPayload);
+    const content = this.resolveTemplate(validated);
 
-    await this.sendEmail(validatedPayload.to, emailContent);
+    await this.provider.send({
+      to: validated.to,
+      content,
+    });
   }
 
   private resolveTemplate(payload: EmailPayload): EmailResult {
@@ -23,32 +29,9 @@ export class EmailService {
         return welcomeTemplate(payload.data);
 
       default:
-        const exhaustiveCheck: never = payload;
-        throw new Error(`Unhandled email type: ${exhaustiveCheck}`);
+        // Nunca deve acontecer por causa do Zod,
+        // mas protege contra uso indevido
+        throw new InternalServerError("Unsupported email type");
     }
-  }
-
-  private async sendEmail(to: string, content: EmailResult): Promise<void> {
-    const stage = process.env.STAGE || "local";
-
-    if (stage === "local") {
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("📧 EMAIL SENT (DEV MODE)");
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("To:", to);
-      console.log("Subject:", content.subject);
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log(content.text);
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
-      return;
-    }
-
-    // staging/prod: SES real
-    await this.sendViaSES(to, content);
-  }
-
-  private async sendViaSES(to: string, content: EmailResult): Promise<void> {
-    // TODO: Implementar SES real
-    console.log("📧 Sending via SES to:", to);
   }
 }

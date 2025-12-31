@@ -15,11 +15,7 @@ services:
       - "5173:5173"
       - "3000:3000"
     environment:
-      - NODE_ENV=development
-      - DYNAMODB_ENDPOINT=http://localstack:4566
       - AWS_REGION=sa-east-1
-      - AWS_ACCESS_KEY_ID=test
-      - AWS_SECRET_ACCESS_KEY=test
     depends_on:
       - localstack
     networks:
@@ -33,7 +29,7 @@ services:
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=dynamodb
+      - SERVICES=dynamodb,ses
       - DEBUG=1
     volumes:
       - localstack-data:/var/lib/localstack
@@ -50,6 +46,7 @@ services:
       - AWS_REGION=sa-east-1
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
+
     networks:
       - authflow-network
     depends_on:

@@ -1,23 +1,38 @@
 import { RegisterRequest, RegisterResponse } from "@src/features/auth/register/register-schemas";
-import { $newCredential, NewCredential } from "@src/features/credential/credential-schemas";
-import { CredentialService } from "@src/features/credential/CredentialService";
-import { $newUser } from "@src/features/user/user-schemas";
+import { Credential } from "@src/features/credential/credential-schemas";
+import { $newUser, User } from "@src/features/user/user-schemas";
 import { UserService } from "@src/features/user/UserService";
 import { ConflictError } from "@src/shared/errors/errors";
 import { EmailService } from "@src/shared/services/email/EmailService";
+import { EmailProviderSES } from "@src/shared/services/email/EmailProvider";
 import { TokenService } from "@src/shared/services/jwt/TokenService";
+import { CryptoService } from "@src/shared/services/CryptoService";
+import { RegisterRepository } from "@src/features/auth/register/RegisterRepository";
+import { randomUUID } from "crypto";
+import dayjs from "dayjs";
+import { env } from "@src/shared/config/env";
+
+interface RegisterServiceDependencies {
+  userService?: UserService;
+  registerRepository?: RegisterRepository;
+  tokenService?: TokenService;
+  emailService?: EmailService;
+  cryptoService?: CryptoService;
+}
 
 export class RegisterService {
   private userService: UserService;
-  private credentialService: CredentialService;
+  private registerRepository: RegisterRepository;
   private tokenService: TokenService;
   private emailService: EmailService;
+  private cryptoService: CryptoService;
 
-  constructor() {
-    this.userService = new UserService();
-    this.credentialService = new CredentialService();
-    this.tokenService = new TokenService();
-    this.emailService = new EmailService();
+  constructor(dependencies?: RegisterServiceDependencies) {
+    this.userService = dependencies?.userService ?? new UserService();
+    this.registerRepository = dependencies?.registerRepository ?? new RegisterRepository();
+    this.tokenService = dependencies?.tokenService ?? new TokenService();
+    this.emailService = dependencies?.emailService ?? new EmailService(new EmailProviderSES());
+    this.cryptoService = dependencies?.cryptoService ?? new CryptoService();
   }
 
   async execute(registerRequest: RegisterRequest): Promise<RegisterResponse> {
@@ -26,25 +41,43 @@ export class RegisterService {
       throw new ConflictError("User already exists");
     }
 
-    //TODO: aqui estou com um problema de inconsistencia por que posso criar um user e falhar na credencial
-    //daria para resolver usando o TRANSACTION no repository.
+    // Prepare user data
+    const now = dayjs().toISOString();
+    const userId = randomUUID();
     const newUser = $newUser.parse(registerRequest);
-    const user = await this.userService.create(newUser);
 
-    const newCredentialToSave: NewCredential = {
-      userId: user.id,
-      password: registerRequest.password,
+    const user: User = {
+      id: userId,
+      version: 1,
+      name: newUser.name,
+      email: newUser.email,
+      status: "PENDING",
+      createdAt: now,
+      updatedAt: now,
     };
-    const newCredential = $newCredential.parse(newCredentialToSave);
-    await this.credentialService.create(newCredential);
+
+    // Prepare credential data
+    const credentialId = randomUUID();
+    const passwordHash = await this.cryptoService.hashPassword(registerRequest.password);
+
+    const credential: Credential = {
+      id: credentialId,
+      version: 1,
+      userId: user.id,
+      passwordHash,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    // Atomically create both user and credential in a single transaction
+    await this.registerRepository.createUserWithCredential(user, credential);
 
     const confirmationToken = await this.tokenService.generateEmailConfirmationToken({
       userId: user.id,
       email: user.email,
     });
 
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-    const confirmationUrl = `${frontendUrl}/confirm-email?token=${confirmationToken}`;
+    const confirmationUrl = `${env.FRONTEND_URL}/confirm-email?token=${confirmationToken}`;
 
     await this.emailService.send({
       type: "CONFIRMATION",

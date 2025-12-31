@@ -47,6 +47,11 @@ export const $emailPayload = z.discriminatedUnion("type", [
   }),
 ]);
 
+export const $emailSendInput = z.object({
+  to: z.email(),
+  content: $emailResult,
+});
+
 // ===== Types =====
 export type EmailType = z.infer<typeof $emailType>;
 export type EmailConfirmationData = z.infer<typeof $emailConfirmationData>;
@@ -54,3 +59,4 @@ export type PasswordResetData = z.infer<typeof $passwordResetData>;
 export type WelcomeData = z.infer<typeof $welcomeData>;
 export type EmailResult = z.infer<typeof $emailResult>;
 export type EmailPayload = z.infer<typeof $emailPayload>;
+export type EmailSendInput = z.infer<typeof $emailSendInput>;

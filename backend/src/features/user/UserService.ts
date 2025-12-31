@@ -4,11 +4,15 @@ import { ConflictError, NotFoundError } from "@src/shared/errors/errors";
 import { randomUUID } from "crypto";
 import dayjs from "dayjs";
 
+interface UserServiceDependencies {
+  userRepository?: UserRepository;
+}
+
 export class UserService {
   private userRepository: UserRepository;
 
-  constructor() {
-    this.userRepository = new UserRepository();
+  constructor(dependencies?: UserServiceDependencies) {
+    this.userRepository = dependencies?.userRepository ?? new UserRepository();
   }
 
   async create(newUser: NewUser): Promise<User> {

@@ -4,6 +4,7 @@ import { UserService } from "@src/features/user/UserService";
 import { TokenService } from "@src/shared/services/jwt/TokenService";
 import { NotFoundError, UnauthorizedError } from "@src/shared/errors/errors";
 import { EmailService } from "@src/shared/services/email/EmailService";
+import { EmailProviderSES } from "@src/shared/services/email/EmailProvider";
 
 export class ConfirmationService {
   private userService: UserService;
@@ -13,7 +14,7 @@ export class ConfirmationService {
   constructor() {
     this.userService = new UserService();
     this.tokenService = new TokenService();
-    this.emailService = new EmailService();
+    this.emailService = new EmailService(new EmailProviderSES());
   }
 
   async execute(request: ConfirmEmailRequest): Promise<ConfirmEmailResponse> {
