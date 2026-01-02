@@ -69,8 +69,12 @@ export class UserRepository {
   }
 
   async patch(userId: string, updates: Partial<User>): Promise<void> {
+    console.log("updates", updates);
     const { updateExpression, expressionAttributeNames, expressionAttributeValues } =
       buildUpdateExpression(updates);
+    console.log("updateExpression", updateExpression);
+    console.log("expressionAttributeNames", expressionAttributeNames);
+    console.log("expressionAttributeValues", expressionAttributeValues);
 
     await dynamoDBClient.send(
       new UpdateCommand({

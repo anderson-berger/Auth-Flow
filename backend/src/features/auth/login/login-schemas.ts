@@ -1,4 +1,3 @@
-import { $user } from "@src/features/user/user-schemas";
 import { z } from "zod";
 
 export const $loginRequest = z.object({
@@ -9,7 +8,6 @@ export const $loginRequest = z.object({
 export const $loginResponse = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
-  user: $user,
 });
 
 export type LoginRequest = z.infer<typeof $loginRequest>;

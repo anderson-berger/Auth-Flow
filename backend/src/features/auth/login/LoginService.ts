@@ -67,7 +67,6 @@ export class LoginService {
     return {
       accessToken,
       refreshToken,
-      user,
     };
   }
 }

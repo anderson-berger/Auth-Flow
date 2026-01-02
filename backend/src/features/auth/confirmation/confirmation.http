@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ### Confirm Email (com token válido)
-GET {{api_local}}/auth/confirm-email?token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJlYzc1ZTIwNS01ZmM3LTQ4YzYtODU1NS0wOTgxYWEzNzQ0MTgiLCJlbWFpbCI6ImFuZGVyc29uQGFuZGVyc29uLmNvbSIsImlhdCI6MTc2NzAxNzg1OCwiZXhwIjoxNzY3NjIyNjU4fQ.rD7RMmx7WUAE_mdR1Nys4B7Djj6FKvVlFnZYMhVwr30
+GET {{api_local}}/auth/confirm-email?token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJlODBhZGM0ZC01NDQ0LTQ2ZDItYWIxMS1mNWU4NWNjNDQ4ZGEiLCJlbWFpbCI6ImFuZGVyc29uQGFuZGVyc29uLmNvbSIsImlhdCI6MTc2NzMwMTczMywiZXhwIjoxNzY3MzAyNjMzfQ.Egf4qPuJvw3n1k4r_ADtnFHdEr2FN6VbmbR_HEQoJlQ
 
 ### Confirm Email (sem token - deve dar erro 400)
 GET {{api_local}}/auth/confirm-email

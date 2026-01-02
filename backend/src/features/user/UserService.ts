@@ -62,11 +62,8 @@ export class UserService {
       return;
     }
 
-    const now = dayjs().toISOString();
-
     await this.userRepository.patch(userId, {
       status,
-      updatedAt: now,
     });
   }
 }
