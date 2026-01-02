@@ -83,7 +83,7 @@ const serverlessConfiguration: AWS = {
       events: [
         {
           httpApi: {
-            path: "/health",
+            path: "/api/health",
             method: "GET",
           },
         },
@@ -94,7 +94,7 @@ const serverlessConfiguration: AWS = {
       events: [
         {
           httpApi: {
-            path: "/auth/login",
+            path: "/api/auth/login",
             method: "POST",
             //TODO: depois de criar a interface personalizada remover o ts-ignore
             // @ts-ignore - serverless-apigateway-route-settings adiciona essa propriedade
@@ -111,7 +111,7 @@ const serverlessConfiguration: AWS = {
       events: [
         {
           httpApi: {
-            path: "/auth/register",
+            path: "/api/auth/register",
             method: "POST",
           },
         },
@@ -122,7 +122,7 @@ const serverlessConfiguration: AWS = {
       events: [
         {
           httpApi: {
-            path: "/auth/confirm-email",
+            path: "/api/auth/confirm-email",
             method: "GET",
           },
         },
@@ -133,7 +133,7 @@ const serverlessConfiguration: AWS = {
       events: [
         {
           httpApi: {
-            path: "/auth/refresh",
+            path: "/api/auth/refresh",
             method: "POST",
           },
         },

@@ -41,7 +41,6 @@ export class RegisterService {
       throw new ConflictError("User already exists");
     }
 
-    // Prepare user data
     const now = dayjs().toISOString();
     const userId = randomUUID();
     const newUser = $newUser.parse(registerRequest);
@@ -56,7 +55,6 @@ export class RegisterService {
       updatedAt: now,
     };
 
-    // Prepare credential data
     const credentialId = randomUUID();
     const passwordHash = await this.cryptoService.hashPassword(registerRequest.password);
 
@@ -69,7 +67,6 @@ export class RegisterService {
       updatedAt: now,
     };
 
-    // Atomically create both user and credential in a single transaction
     await this.registerRepository.createUserWithCredential(user, credential);
 
     const confirmationToken = await this.tokenService.generateEmailConfirmationToken({
@@ -79,15 +76,18 @@ export class RegisterService {
 
     const confirmationUrl = `${env.FRONTEND_URL}/confirm-email?token=${confirmationToken}`;
 
-    await this.emailService.send({
-      type: "CONFIRMATION",
-      to: user.email,
-      data: {
-        userName: user.name,
-        confirmationToken,
-        confirmationUrl,
-      },
-    });
+    if (env.STAGE.toLocaleLowerCase() === "local") {
+    } else {
+      await this.emailService.send({
+        type: "CONFIRMATION",
+        to: user.email,
+        data: {
+          userName: user.name,
+          confirmationToken,
+          confirmationUrl,
+        },
+      });
+    }
 
     const response: RegisterResponse = {
       message: "Registration successful. Please check your email to confirm your account.",

@@ -50,7 +50,7 @@ export class EmailProviderSES implements EmailProvider {
         },
       },
     };
-
+    console.log("text", content.text);
     try {
       await this.sesClient.send(new SendEmailCommand(params));
     } catch (error) {
