@@ -1,1 +1,12 @@
 /* app global css */
+
+/* Custom CSS variables for dark mode support */
+:root {
+  --landing-gradient-start: #667eea;
+  --landing-gradient-end: #764ba2;
+}
+
+body.body--dark {
+  --landing-gradient-start: #5568d3;
+  --landing-gradient-end: #663d8f;
+}

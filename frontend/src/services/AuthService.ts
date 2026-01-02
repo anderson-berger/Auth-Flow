@@ -62,14 +62,6 @@ class AuthService {
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
     localStorage.removeItem(this.USER_DATA_KEY);
   }
-
-  /**
-   * Limpa tudo e redireciona para login
-   */
-  clearAndRedirect(): void {
-    this.logout();
-    window.location.href = '/login';
-  }
 }
 
 export default new AuthService();

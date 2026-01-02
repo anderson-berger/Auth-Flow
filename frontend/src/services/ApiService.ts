@@ -46,21 +46,21 @@ class ApiService {
    * Solicita reset de senha
    */
   async requestPasswordReset(data: RequestCredentialReset): Promise<void> {
-    await api.post('/api/credential', data);
+    await api.post('/credential', data);
   }
 
   /**
    * Reseta a senha com o token
    */
   async resetPassword(data: ResetCredential): Promise<void> {
-    await api.put('/api/credential', data);
+    await api.put('/credential', data);
   }
 
   /**
    * Exemplo de chamada protegida (dashboard)
    */
   async getDashboardData(): Promise<unknown> {
-    const response = await api.get('/api/dashboard');
+    const response = await api.get('/dashboard');
     return response.data;
   }
 }

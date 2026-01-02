@@ -62,6 +62,7 @@ import RegisterForm from 'src/pages/public/auth-page/RegisterForm.vue';
 import type { LoginRequest } from '@backend/features/auth/login/login-schemas';
 import type { RegisterRequest } from '@backend/features/auth/register/register-schemas';
 import ApiService from 'src/services/ApiService';
+import AuthService from 'src/services/AuthService';
 
 export default defineComponent({
   name: 'AuthPage',
@@ -83,9 +84,8 @@ export default defineComponent({
         await this.$load.execute('login', async () => {
           const response = await ApiService.login(loginData);
 
-          // Armazena tokens
-          localStorage.setItem('accessToken', response.accessToken);
-          localStorage.setItem('refreshToken', response.refreshToken);
+          // Armazena tokens usando AuthService
+          AuthService.setTokens(response.accessToken, response.refreshToken);
 
           this.$q.notify({
             type: 'positive',
@@ -93,7 +93,9 @@ export default defineComponent({
             position: 'top',
           });
 
-          await this.$router.push('/app');
+          // Verifica se tem redirect query param
+          const redirect = (this.$route.query.redirect as string) || '/app';
+          await this.$router.push(redirect);
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Erro ao fazer login. Verifique suas credenciais.';
@@ -160,7 +162,7 @@ export default defineComponent({
   align-items: center;
   min-height: calc(100vh - 64px);
   padding: 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--landing-gradient-start) 0%, var(--landing-gradient-end) 100%);
 }
 
 .auth-card {
@@ -173,10 +175,6 @@ export default defineComponent({
 
 :deep(.q-tab-panel) {
   padding: 0;
-}
-
-:deep(.q-tabs) {
-  background: white;
 }
 
 :deep(.q-tab) {

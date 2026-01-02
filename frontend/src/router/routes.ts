@@ -16,6 +16,11 @@ const routes: RouteRecordRaw[] = [
         name: 'auth',
         component: () => import('pages/public/AuthPage.vue'),
       },
+      {
+        path: 'confirm-email',
+        name: 'confirm-email',
+        component: () => import('pages/public/ConfirmEmailPage.vue'),
+      },
     ],
   },
 
@@ -24,11 +29,11 @@ const routes: RouteRecordRaw[] = [
     path: '/app',
     component: () => import('layouts/PrivateLayout.vue'),
     children: [
-      // {
-      //   path: '',
-      //   name: 'dashboard',
-      //   component: () => import('pages/IndexPage.vue'),
-      // },
+      {
+        path: '',
+        name: 'dashboard',
+        component: () => import('pages/private/DashboardPage.vue'),
+      },
     ],
   },
 
