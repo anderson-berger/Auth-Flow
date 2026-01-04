@@ -173,9 +173,11 @@ export default defineComponent({
     },
 
     async handleCreateAccount() {
-      await this.$router.push('/auth');
+      await this.$router.push({
+        name: 'auth',
+        params: { from: 'register' },
+      });
     },
-
     async navigateAndCloseDrawer(path: string) {
       await this.$router.push(path);
       this.drawer = false;

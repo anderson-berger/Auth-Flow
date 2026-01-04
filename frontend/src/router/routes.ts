@@ -12,9 +12,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/public/LandingPage.vue'),
       },
       {
-        path: 'auth',
+        path: '/auth/:from?',
         name: 'auth',
         component: () => import('pages/public/AuthPage.vue'),
+        props: true,
       },
       {
         path: 'confirm-email',
