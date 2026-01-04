@@ -71,10 +71,16 @@ export default defineComponent({
     LoginForm,
     RegisterForm,
   },
+  props: {
+    from: {
+      type: String as () => 'login' | 'register' | undefined,
+      required: false,
+    },
+  },
 
   data() {
     return {
-      activeTab: 'login' as 'login' | 'register',
+      activeTab: this.from === 'register' ? 'register' : 'login',
     };
   },
 
@@ -98,7 +104,10 @@ export default defineComponent({
           await this.$router.push(redirect);
         });
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Erro ao fazer login. Verifique suas credenciais.';
+        const message =
+          error instanceof Error
+            ? error.message
+            : 'Erro ao fazer login. Verifique suas credenciais.';
         this.$q.notify({
           type: 'negative',
           message,
@@ -130,7 +139,8 @@ export default defineComponent({
           }, 1500);
         });
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Erro ao criar conta. Tente novamente.';
+        const message =
+          error instanceof Error ? error.message : 'Erro ao criar conta. Tente novamente.';
         this.$q.notify({
           type: 'negative',
           message,
@@ -162,7 +172,11 @@ export default defineComponent({
   align-items: center;
   min-height: calc(100vh - 64px);
   padding: 24px;
-  background: linear-gradient(135deg, var(--landing-gradient-start) 0%, var(--landing-gradient-end) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--landing-gradient-start) 0%,
+    var(--landing-gradient-end) 100%
+  );
 }
 
 .auth-card {
