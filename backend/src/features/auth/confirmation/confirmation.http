@@ -8,8 +8,8 @@ POST {{api_local}}/auth/login
 Content-Type: application/json
 
 {
-   "email": "testes@testes.com",
-   "password": "senha123" 
+   "email": "anderson@anderson.com",
+   "password": "anderson" 
 }
 
 ### Register

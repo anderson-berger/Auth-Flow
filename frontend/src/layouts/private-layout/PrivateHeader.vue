@@ -9,6 +9,16 @@
       </q-toolbar-title>
 
       <q-space />
+      <q-btn
+        flat
+        dense
+        round
+        :icon="isDarkMode ? 'light_mode' : 'dark_mode'"
+        @click="healthCheck"
+        class="q-mr-sm"
+      >
+        <q-tooltip>{{ isDarkMode ? 'Modo Claro' : 'Modo Escuro' }}</q-tooltip>
+      </q-btn>
 
       <q-btn
         flat
@@ -72,6 +82,7 @@
 import { defineComponent } from 'vue';
 import { Dark } from 'quasar';
 import AuthService from 'src/services/AuthService';
+import ApiService from 'src/services/ApiService';
 
 export default defineComponent({
   name: 'PrivateHeader',
@@ -133,7 +144,7 @@ export default defineComponent({
           persistent: true,
         })
         .onOk(() => {
-          this.logout();
+          void this.logout();
         });
     },
 
@@ -147,6 +158,10 @@ export default defineComponent({
       });
 
       await this.$router.push({ name: 'auth' });
+    },
+
+    async healthCheck() {
+      await ApiService.healthCheck();
     },
   },
 

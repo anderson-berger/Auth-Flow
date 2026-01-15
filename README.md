@@ -5,18 +5,21 @@ Sistema de autenticação serverless com Vue 3 e AWS Lambda.
 ## 🚀 Stack Tecnológica
 
 ### Frontend
+
 - Vue 3 (Options API)
 - Quasar Framework
 - TypeScript (strict mode)
 - Vite
 
 ### Backend
+
 - AWS Lambda
 - API Gateway
 - DynamoDB (single table design)
 - TypeScript
 
 ### Infraestrutura
+
 - Serverless Framework 4
 - LocalStack (desenvolvimento local)
 - Docker & DevContainer
@@ -35,6 +38,7 @@ Sistema de autenticação serverless com Vue 3 e AWS Lambda.
 ## 🛠️ Setup do Projeto
 
 ### Pré-requisitos
+
 - Node.js >= 18.0.0
 - npm >= 9.0.0
 - Docker & Docker Compose
@@ -80,8 +84,8 @@ authflow/
 
 ## 🌍 Ambientes
 
-- **dev**: Local com LocalStack
-- **staging**: AWS sa-east-1 (ambiente de testes)
+- **local**: Local com LocalStack
+- **dev**: AWS sa-east-1 (ambiente de testes)
 - **prod**: AWS sa-east-1 (produção)
 
 ## 🧪 Testes

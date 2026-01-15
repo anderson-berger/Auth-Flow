@@ -8,6 +8,8 @@ import type {
   ResetCredential,
 } from '@backend/features/credential/credential-schemas';
 
+import AuthService from 'src/services/AuthService';
+
 class ApiService {
   /**
    * Registra um novo usuário
@@ -26,9 +28,11 @@ class ApiService {
   /**
    * Faz login do usuário
    */
-  async login(data: LoginRequest): Promise<LoginResponse> {
-    const response = await api.post<LoginResponse>('/auth/login', data);
-    return response.data;
+  async login(loginRequest: LoginRequest): Promise<void> {
+    const { data } = await api.post<LoginResponse>('/auth/login', loginRequest);
+    const { accessToken, refreshToken } = data;
+
+    AuthService.setTokens(accessToken, refreshToken);
   }
 
   /**
@@ -62,6 +66,11 @@ class ApiService {
   async getDashboardData(): Promise<unknown> {
     const response = await api.get('/dashboard');
     return response.data;
+  }
+
+  async healthCheck() {
+    const { data } = await api.get('/health');
+    console.log('data', data);
   }
 }
 

@@ -17,6 +17,23 @@ const serverlessConfiguration: AWS = {
       STAGE: "${self:provider.stage}",
       TABLE: "${self:service}-${opt:stage, 'local'}",
     },
+    httpApi: {
+      cors: {
+        allowedOrigins: ["http://localhost:9000"],
+        allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
+        allowedMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowCredentials: true,
+        maxAge: 300,
+      },
+      authorizers: {
+        authLambda: {
+          type: "request",
+          functionName: "authorizer",
+          identitySource: ["$request.header.Authorization"],
+          enableSimpleResponses: false,
+        },
+      },
+    },
 
     // IAM Permissions
     iam: {
@@ -60,7 +77,7 @@ const serverlessConfiguration: AWS = {
   // Plugins
   plugins: ["serverless-offline", "serverless-apigateway-route-settings"],
   // limitação com o throttling: não é possível testá-lo no stage local.
-  // posso criar um Middleware para simular, nao gosto da ideia, ou posso testa em dev :/
+  // posso criar um Middleware para simular mas nao gosto da ideia, ou posso testar em dev :/
 
   // Configurações customizadas
   custom: {
@@ -78,6 +95,10 @@ const serverlessConfiguration: AWS = {
 
   // Functions (Lambdas)
   functions: {
+    authorizer: {
+      handler: "src/shared/middleware/authorize.handler",
+      description: "JWT authorizer for HTTP API",
+    },
     health: {
       handler: "src/features/health/handler.handler",
       events: [
@@ -85,6 +106,9 @@ const serverlessConfiguration: AWS = {
           httpApi: {
             path: "/api/health",
             method: "GET",
+            authorizer: {
+              name: "authLambda",
+            },
           },
         },
       ],
