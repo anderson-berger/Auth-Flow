@@ -62,7 +62,6 @@ import RegisterForm from 'src/pages/public/auth-page/RegisterForm.vue';
 import type { LoginRequest } from '@backend/features/auth/login/login-schemas';
 import type { RegisterRequest } from '@backend/features/auth/register/register-schemas';
 import ApiService from 'src/services/ApiService';
-import AuthService from 'src/services/AuthService';
 
 export default defineComponent({
   name: 'AuthPage',
@@ -88,10 +87,7 @@ export default defineComponent({
     async handleLogin(loginData: LoginRequest) {
       try {
         await this.$load.execute('login', async () => {
-          const response = await ApiService.login(loginData);
-
-          // Armazena tokens usando AuthService
-          AuthService.setTokens(response.accessToken, response.refreshToken);
+          await ApiService.login(loginData);
 
           this.$q.notify({
             type: 'positive',

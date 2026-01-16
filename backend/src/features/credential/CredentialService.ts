@@ -68,12 +68,8 @@ export class CredentialService {
     await this.credentialRepository.save(credential);
   }
 
-  async getByUserId(userId: User["id"]): Promise<Credential> {
+  async getByUserId(userId: User["id"]): Promise<Credential | undefined> {
     const credential = await this.credentialRepository.getByUserId(userId);
-
-    if (!credential) {
-      throw new NotFoundError("Credential not found for this user");
-    }
 
     return credential;
   }

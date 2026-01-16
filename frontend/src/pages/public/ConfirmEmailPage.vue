@@ -4,14 +4,14 @@
       <q-card class="confirm-card">
         <q-card-section class="text-center q-pt-xl q-pb-lg">
           <!-- Loading State -->
-          <div v-if="status === 'loading'" class="status-content">
+          <div v-if="currentStatus === 'loading'" class="status-content">
             <q-spinner-hourglass size="80px" color="primary" class="q-mb-lg" />
             <h5 class="text-h5 text-weight-medium q-mb-sm">Confirmando seu email...</h5>
             <p class="text-body2 text-grey-7">Por favor, aguarde</p>
           </div>
 
           <!-- Success State -->
-          <div v-else-if="status === 'success'" class="status-content">
+          <div v-else-if="currentStatus === 'success'" class="status-content">
             <q-icon name="check_circle" size="80px" color="positive" class="q-mb-lg" />
             <h5 class="text-h5 text-weight-medium q-mb-sm">Email confirmado com sucesso!</h5>
             <p class="text-body2 text-grey-7 q-mb-lg">
@@ -29,7 +29,7 @@
           </div>
 
           <!-- Error State -->
-          <div v-else-if="status === 'error'" class="status-content">
+          <div v-else-if="currentStatus === 'error'" class="status-content">
             <q-icon name="error" size="80px" color="negative" class="q-mb-lg" />
             <h5 class="text-h5 text-weight-medium q-mb-sm">Erro na confirmação</h5>
             <p class="text-body2 text-grey-7 q-mb-lg">
@@ -48,7 +48,7 @@
           </div>
 
           <!-- Invalid Token State -->
-          <div v-else-if="status === 'invalid'" class="status-content">
+          <div v-else-if="currentStatus === 'invalid'" class="status-content">
             <q-icon name="warning" size="80px" color="warning" class="q-mb-lg" />
             <h5 class="text-h5 text-weight-medium q-mb-sm">Link inválido</h5>
             <p class="text-body2 text-grey-7 q-mb-lg">
@@ -79,30 +79,19 @@ export default defineComponent({
 
   data() {
     return {
-      status: 'loading' as 'loading' | 'success' | 'error' | 'invalid',
+      currentStatus: 'loading' as 'loading' | 'success' | 'error' | 'invalid',
       errorMessage: '',
       token: '',
     };
   },
 
-  async mounted() {
-    this.token = (this.$route.query.token as string) || '';
-
-    if (!this.token) {
-      this.status = 'invalid';
-      return;
-    }
-
-    await this.confirmEmail();
-  },
-
   methods: {
     async confirmEmail() {
       try {
-        this.status = 'loading';
+        this.currentStatus = 'loading';
         await ApiService.confirmEmail(this.token);
 
-        this.status = 'success';
+        this.currentStatus = 'success';
 
         this.$q.notify({
           type: 'positive',
@@ -112,16 +101,15 @@ export default defineComponent({
 
         // Redireciona para login após 3 segundos
         setTimeout(() => {
-          this.goToLogin();
+          void this.goToLogin();
         }, 3000);
       } catch (error) {
-        this.status = 'error';
+        this.currentStatus = 'error';
 
-        if (error instanceof Error) {
-          this.errorMessage = error.message;
-        } else {
-          this.errorMessage = 'Não foi possível confirmar seu email. Tente novamente mais tarde.';
-        }
+        this.errorMessage =
+          error instanceof Error
+            ? error.message
+            : 'Não foi possível confirmar seu email. Tente novamente mais tarde.';
 
         this.$q.notify({
           type: 'negative',
@@ -142,6 +130,16 @@ export default defineComponent({
     async goToHome() {
       await this.$router.push('/');
     },
+  },
+  async mounted() {
+    this.token = (this.$route.query.token as string) || '';
+
+    if (!this.token) {
+      this.currentStatus = 'invalid';
+      return;
+    }
+
+    await this.confirmEmail();
   },
 });
 </script>

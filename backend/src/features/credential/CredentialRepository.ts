@@ -32,7 +32,7 @@ export class CredentialRepository {
   /**
    * Busca credencial por userId
    */
-  async getByUserId(userId: string): Promise<Credential | null> {
+  async getByUserId(userId: string): Promise<Credential | undefined> {
     const result = await dynamoDBClient.send(
       new GetCommand({
         TableName: TABLE,
@@ -44,7 +44,7 @@ export class CredentialRepository {
     );
 
     if (!result.Item) {
-      return null;
+      return undefined;
     }
 
     return $credential.parse(result.Item);
